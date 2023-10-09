@@ -9,9 +9,16 @@ namespace ISA_1
         public ISA()
         {
             InitializeComponent();
+
+            // Set default index of dropdown D
             this.dropdownD.SelectedIndex = 2;
+
+            // Set style for data grid view
             dataGridView1.RowHeadersVisible = false;
             dataGridView1.AllowUserToAddRows = false;
+
+            // Set style for groupBox Header
+            this.groupBoxHeader.Paint += groupBoxHeader_Paint!;
         }
 
         public (double precision, int decimalPlaces) getDecimalPrecisionData()
@@ -104,7 +111,7 @@ namespace ISA_1
                 d = 0.001;
                 decimalPlaces = 3;
             }
-            
+
             int l = this.getL(a, b, d);
 
             for (int i = 1; i <= n; ++i)
@@ -116,7 +123,7 @@ namespace ISA_1
 
                 // Set variables value
                 xRealFirst = this.GenerateNumberInRangeWithPrecision(a, b, decimalPlaces);
-                
+
                 if (staticData)
                 {
                     xRealFirst = -1.012;
@@ -138,7 +145,17 @@ namespace ISA_1
 
         private void ISA_Resize(object sender, EventArgs e)
         {
-            this.groupBox1.Left = this.Width / 2 - this.groupBox1.Width / 2;
+            // Set groupBoxHeader and dataGridView1 position to center on resize 
+            this.groupBoxHeader.Left = this.Width / 2 - this.groupBoxHeader.Width / 2;
+            this.dataGridView1.Left = this.Width / 2 - this.dataGridView1.Width / 2;
+
+            // Set labelSignature position to right on resize 
+            this.labelSignature.Left = this.Width - this.labelSignature.Width - 25;
+        }
+
+        private void groupBoxHeader_Paint(object sender, PaintEventArgs e)
+        {
+            e.Graphics.Clear(SystemColors.Control);
         }
     }
 }

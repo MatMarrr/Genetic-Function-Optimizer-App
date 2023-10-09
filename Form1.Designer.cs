@@ -45,9 +45,10 @@
             xInt2 = new DataGridViewTextBoxColumn();
             xReal2 = new DataGridViewTextBoxColumn();
             fX = new DataGridViewTextBoxColumn();
-            groupBox1 = new GroupBox();
+            groupBoxHeader = new GroupBox();
+            labelSignature = new Label();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
-            groupBox1.SuspendLayout();
+            groupBoxHeader.SuspendLayout();
             SuspendLayout();
             // 
             // buttonStart
@@ -135,7 +136,7 @@
             dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView1.Columns.AddRange(new DataGridViewColumn[] { lp, xReal1, xInt1, xBin, xInt2, xReal2, fX });
-            dataGridView1.Location = new Point(21, 60);
+            dataGridView1.Location = new Point(33, 72);
             dataGridView1.Name = "dataGridView1";
             dataGridView1.RowTemplate.Height = 25;
             dataGridView1.Size = new Size(744, 343);
@@ -184,37 +185,50 @@
             fX.Name = "fX";
             fX.Width = 50;
             // 
-            // groupBox1
+            // groupBoxHeader
             // 
-            groupBox1.Controls.Add(labelN);
-            groupBox1.Controls.Add(dataGridView1);
-            groupBox1.Controls.Add(buttonStart);
-            groupBox1.Controls.Add(labelA);
-            groupBox1.Controls.Add(labelD);
-            groupBox1.Controls.Add(inputA);
-            groupBox1.Controls.Add(labelB);
-            groupBox1.Controls.Add(inputB);
-            groupBox1.Controls.Add(dropdownD);
-            groupBox1.Controls.Add(inputN);
-            groupBox1.Location = new Point(12, 1);
-            groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(802, 426);
-            groupBox1.TabIndex = 10;
-            groupBox1.TabStop = false;
+            groupBoxHeader.Controls.Add(labelN);
+            groupBoxHeader.Controls.Add(buttonStart);
+            groupBoxHeader.Controls.Add(labelA);
+            groupBoxHeader.Controls.Add(labelD);
+            groupBoxHeader.Controls.Add(inputA);
+            groupBoxHeader.Controls.Add(labelB);
+            groupBoxHeader.Controls.Add(inputB);
+            groupBoxHeader.Controls.Add(dropdownD);
+            groupBoxHeader.Controls.Add(inputN);
+            groupBoxHeader.ForeColor = SystemColors.ControlText;
+            groupBoxHeader.Location = new Point(12, 1);
+            groupBoxHeader.Name = "groupBoxHeader";
+            groupBoxHeader.Size = new Size(802, 54);
+            groupBoxHeader.TabIndex = 10;
+            groupBoxHeader.TabStop = false;
+            // 
+            // labelSignature
+            // 
+            labelSignature.AutoSize = true;
+            labelSignature.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point);
+            labelSignature.Location = new Point(554, 435);
+            labelSignature.Name = "labelSignature";
+            labelSignature.Size = new Size(270, 30);
+            labelSignature.TabIndex = 11;
+            labelSignature.Text = "INA - MateuszMarek_20456";
             // 
             // ISA
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(838, 450);
-            Controls.Add(groupBox1);
+            ClientSize = new Size(838, 504);
+            Controls.Add(labelSignature);
+            Controls.Add(groupBoxHeader);
+            Controls.Add(dataGridView1);
             Name = "ISA";
             Text = "ISA";
             Resize += ISA_Resize;
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
-            groupBox1.ResumeLayout(false);
-            groupBox1.PerformLayout();
+            groupBoxHeader.ResumeLayout(false);
+            groupBoxHeader.PerformLayout();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -236,6 +250,7 @@
         private DataGridViewTextBoxColumn xInt2;
         private DataGridViewTextBoxColumn xReal2;
         private DataGridViewTextBoxColumn fX;
-        private GroupBox groupBox1;
+        private GroupBox groupBoxHeader;
+        private Label labelSignature;
     }
 }
