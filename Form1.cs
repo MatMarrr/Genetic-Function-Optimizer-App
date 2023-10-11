@@ -40,6 +40,12 @@ namespace ISA_1
             }
         }
 
+        public string forceDecimalPlaces(double number, int decimalPlaces)
+        {
+            string formatString = "0." + new string('0', decimalPlaces);
+            return number.ToString(formatString);
+        }
+
         public int realToInt(double realNumber, int a, int b, int l)
         {
             return (int)Math.Floor((1 / (double)(b - a)) * (realNumber - a) * (Math.Pow(2, l) - 1));
@@ -136,7 +142,7 @@ namespace ISA_1
                 xF = this.xF(xRealSecond);
 
                 // Add table row with values
-                this.dataGridView1.Rows.Add(i, xRealFirst, xIntFirst, xBin, xIntSecond, xRealSecond, xF);
+                this.dataGridView1.Rows.Add(i, this.forceDecimalPlaces(xRealFirst,decimalPlaces), xIntFirst, xBin, xIntSecond, this.forceDecimalPlaces(xRealSecond,decimalPlaces), xF);
             }
 
             // Show table
