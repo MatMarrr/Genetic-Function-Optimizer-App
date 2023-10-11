@@ -1,0 +1,5 @@
+C:\Users\MatMar\Desktop\ISA KOD\C#\ISA-1\bin\Release\net7.0-windows\publish\ISA-1.exe
+C:\Users\MatMar\Desktop\ISA KOD\C#\ISA-1\bin\Release\net7.0-windows\publish\ISA-1.dll
+C:\Users\MatMar\Desktop\ISA KOD\C#\ISA-1\bin\Release\net7.0-windows\publish\ISA-1.deps.json
+C:\Users\MatMar\Desktop\ISA KOD\C#\ISA-1\bin\Release\net7.0-windows\publish\ISA-1.runtimeconfig.json
+C:\Users\MatMar\Desktop\ISA KOD\C#\ISA-1\bin\Release\net7.0-windows\publish\ISA-1.pdb
