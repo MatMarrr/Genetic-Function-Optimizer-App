@@ -1,11 +1,13 @@
 using System;
+using System.Collections.Generic;
+using System.Reflection;
 using System.Reflection.Metadata.Ecma335;
-
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Windows.Forms.DataVisualization.Charting;
 namespace ISA_1
 {
     public partial class ISA : Form
     {
-        bool staticData = false;
         public ISA()
         {
             InitializeComponent();
@@ -19,6 +21,35 @@ namespace ISA_1
 
             // Set style for groupBox Header
             this.groupBoxHeader.Paint += groupBoxHeader_Paint!;
+        }
+
+        public class EliteXreal
+        {
+            public int index { get; set; }
+            public double xreal { get; set; }
+            public double fx { get; set; }
+        }
+
+        public class ParentPair
+        {
+            public int IndexParent1 { get; set; }
+            public string ValueParent1 { get; set; }
+            public int IndexParent2 { get; set; }
+            public string ValueParent2 { get; set; }
+            public int Pc { get; set; }
+        }
+
+        public class MutationResult
+        {
+            public string XBin { get; set; }
+            public string MutatedBits { get; set; }
+        }
+
+        public class ChartData
+        {
+            public double Min { get; set; }
+            public double Max { get; set; }
+            public double Avg { get; set; }
         }
 
         public (double precision, int decimalPlaces) getDecimalPrecisionData()
@@ -84,69 +115,530 @@ namespace ISA_1
             return Math.Round(number, decimalPlaces);
         }
 
+        private double GenerateR(Random random)
+        {
+            return random.NextDouble();
+        }
+
+        private int GeneratePc(int l)
+        {
+            Random random = new Random();
+            return random.Next(0, l - 1);
+        }
+
         public int getL(int a, int b, double d)
         {
             return (int)Math.Ceiling(Math.Log2((b - a) / d + 1));
         }
 
-        public double xF(double x)
+        public double FunctionValue(double x)
         {
             return (x % 1) * (Math.Cos(20 * Math.PI * x) - (Math.Sin(x)));
+        }
+
+        public (List<GeneticRow> TableLpToFx, EliteXreal ElitexReal) GetTableLpToFx(int a, int b, double d, int decimalPlaces, int n, List<double> xReals)
+        {
+            var resultArray = new List<GeneticRow>();
+            double eliteFX = double.MinValue;
+            EliteXreal elitexReal = new EliteXreal { index = 0, xreal = 0, fx = 0 };
+
+            for (int i = 1; i <= n; i++)
+            {
+                double xReal = xReals.Count > 0 ? xReals[i - 1] : GenerateNumberInRangeWithPrecision(a, b, decimalPlaces);
+                double functionX = FunctionValue(xReal);
+
+                if (functionX > eliteFX)
+                {
+                    eliteFX = functionX;
+                    elitexReal = new EliteXreal { index = i - 1, xreal = xReal, fx = functionX };
+                }
+
+                resultArray.Add(new GeneticRow { lp = i, xreal = xReal, fx = functionX });
+            }
+
+            return (resultArray, elitexReal);
+        }
+
+        public List<GeneticRow> GetTableLpToGx(List<GeneticRow> tableLpToFx, double d, string direction)
+        {
+            double maxVal = double.MinValue;
+            double minVal = double.MaxValue;
+
+            foreach (var row in tableLpToFx)
+            {
+                if (row.fx.HasValue)
+                {
+                    maxVal = Math.Max(maxVal, row.fx.Value);
+                    minVal = Math.Min(minVal, row.fx.Value);
+                }
+            }
+
+            foreach (var row in tableLpToFx)
+            {
+                if (row.fx.HasValue)
+                {
+                    if (direction == "max")
+                    {
+                        row.gx = row.fx.Value - minVal + d;
+                    }
+                    else if (direction == "min")
+                    {
+                        row.gx = -1 * (row.fx.Value - maxVal) + d;
+                    }
+                }
+            }
+
+            return tableLpToFx;
+        }
+
+        public List<GeneticRow> GetTableLpToPi(List<GeneticRow> tableLpToGx)
+        {
+            double sumGi = 0;
+
+            foreach (var row in tableLpToGx)
+            {
+                sumGi += row.gx ?? 0;
+            }
+
+            foreach (var row in tableLpToGx)
+            {
+                row.pi = row.gx.HasValue ? row.gx.Value / sumGi : 0;
+            }
+
+            return tableLpToGx;
+        }
+
+        public List<GeneticRow> GetTableLpToQi(List<GeneticRow> tableLpToPi)
+        {
+            double qiSum = 0;
+
+            foreach (var row in tableLpToPi)
+            {
+                double pi = row.pi ?? 0;
+                qiSum += pi;
+                row.qi = qiSum;
+            }
+
+            return tableLpToPi;
+        }
+
+        public List<GeneticRow> GetTableLpToR(List<GeneticRow> tableLpToQi)
+        {
+            Random random = new Random();
+
+            foreach (var row in tableLpToQi)
+            {
+                row.r = GenerateR(random);
+            }
+
+            return tableLpToQi;
+        }
+
+        public List<GeneticRow> GetTableLpToSelectedXreal(List<GeneticRow> tableLpToR)
+        {
+            foreach (var row in tableLpToR)
+            {
+                double r = row.r ?? 0;
+                bool chosenX = false;
+
+                for (int i = 0; i < tableLpToR.Count; i++)
+                {
+                    double xReal = tableLpToR[i].xreal ?? 0;
+                    double q = tableLpToR[i].qi ?? 0;
+                    double prevQ = i == 0 ? 0 : tableLpToR[i - 1].qi ?? 0;
+
+                    if (prevQ < r && r <= q)
+                    {
+                        row.xrealAfterSelection = xReal;
+                        chosenX = true;
+                        break;
+                    }
+                }
+
+                if (!chosenX)
+                {
+                    row.xrealAfterSelection = null;
+                }
+            }
+
+            return tableLpToR;
+        }
+
+        public List<GeneticRow> GetTableLpToXbinAfterSelection(List<GeneticRow> tableLpToXreal, int a, int b, int l)
+        {
+            foreach (var row in tableLpToXreal)
+            {
+                double? xReal = row.xrealAfterSelection;
+
+                if (xReal == null)
+                {
+                    row.xbinAfterSelection = null;
+                }
+                else
+                {
+                    int xInt = realToInt(xReal.Value, a, b, l);
+                    row.xbinAfterSelection = intToBin(xInt, l);
+                }
+            }
+
+            return tableLpToXreal;
+        }
+
+        public List<GeneticRow> GetTableLpToParents(List<GeneticRow> tableLpToXbin, double pk)
+        {
+            Random random = new Random();
+
+            if (tableLpToXbin.Count == 1)
+            {
+                tableLpToXbin[0].parent = null;
+                return tableLpToXbin;
+            }
+
+            var parentsIndexes = new List<int>();
+            var emptyParentIndexes = new List<int>();
+
+            for (int index = 0; index < tableLpToXbin.Count; index++)
+            {
+                var row = tableLpToXbin[index];
+                double r = GenerateR(random);
+                string xBin = row.xbinAfterSelection;
+
+                if (r <= pk && !parentsIndexes.Contains(index))
+                {
+                    row.parent = xBin;
+                    parentsIndexes.Add(index);
+                }
+                else
+                {
+                    row.parent = null;
+                    emptyParentIndexes.Add(index);
+                }
+            }
+
+            if (parentsIndexes.Count == 1)
+            {
+                int randomParentIndex = random.Next(emptyParentIndexes.Count);
+                int randomParentIndexValue = emptyParentIndexes[randomParentIndex];
+                tableLpToXbin[randomParentIndexValue].parent = tableLpToXbin[randomParentIndexValue].xbinAfterSelection;
+            }
+
+            return tableLpToXbin;
+        }
+
+        public (List<GeneticRow> TableLpToPc, List<ParentPair> Pairs) GetTableLpToPc(List<GeneticRow> tableLpToParents, int l)
+        {
+            var parentsData = new List<ParentPair>();
+            var nonNullParents = tableLpToParents
+                .Select((row, index) => new { row.parent, Index = index })
+                .Where(x => !string.IsNullOrEmpty(x.parent))
+                .ToList();
+
+            if (nonNullParents.Count == 0)
+            {
+                foreach (var row in tableLpToParents)
+                {
+                    row.pc = null;
+                }
+                return (tableLpToParents, new List<ParentPair>());
+            }
+
+            for (int i = 0; i < nonNullParents.Count; i += 2)
+            {
+                int indexParent1 = nonNullParents[i].Index;
+                int indexParent2 = i + 1 < nonNullParents.Count ? nonNullParents[i + 1].Index : nonNullParents[0].Index;
+
+                string parent1 = nonNullParents[i].parent;
+                string parent2 = nonNullParents[i + 1 < nonNullParents.Count ? i + 1 : 0].parent;
+                int pc = GeneratePc(l);
+
+                parentsData.Add(new ParentPair
+                {
+                    IndexParent1 = indexParent1,
+                    ValueParent1 = parent1,
+                    IndexParent2 = indexParent2,
+                    ValueParent2 = parent2,
+                    Pc = pc
+                });
+            }
+
+            foreach (var parentData in parentsData)
+            {
+                if (!tableLpToParents[parentData.IndexParent1].pc.HasValue)
+                {
+                    tableLpToParents[parentData.IndexParent1].pc = parentData.Pc;
+                }
+
+                if (!tableLpToParents[parentData.IndexParent2].pc.HasValue)
+                {
+                    tableLpToParents[parentData.IndexParent2].pc = parentData.Pc;
+                }
+            }
+
+            foreach (var row in tableLpToParents)
+            {
+                if (!row.pc.HasValue)
+                {
+                    row.pc = null;
+                }
+            }
+
+            return (tableLpToParents, parentsData);
+        }
+
+        public (string d1, int d1Index, string d2, int d2Index) CrossParents(ParentPair parents)
+        {
+            int pc = parents.Pc;
+            string firstParentHead = parents.ValueParent1.Substring(0, pc + 1);
+            string firstParentTail = parents.ValueParent1.Substring(pc + 1);
+
+            string secondParentHead = parents.ValueParent2.Substring(0, pc + 1);
+            string secondParentTail = parents.ValueParent2.Substring(pc + 1);
+
+            string d1 = firstParentHead + secondParentTail;
+            string d2 = secondParentHead + firstParentTail;
+
+            return (d1, parents.IndexParent1, d2, parents.IndexParent2);
+        }
+
+        public List<GeneticRow> GetTableLpToCross(List<GeneticRow> tableLpToPc, List<ParentPair> pairs)
+        {
+            foreach (var pair in pairs)
+            {
+                var crossedData = CrossParents(pair);
+
+                if (string.IsNullOrEmpty(tableLpToPc[crossedData.d1Index].cross))
+                {
+                    tableLpToPc[crossedData.d1Index].cross = crossedData.d1;
+                }
+
+                if (string.IsNullOrEmpty(tableLpToPc[crossedData.d2Index].cross))
+                {
+                    tableLpToPc[crossedData.d2Index].cross = crossedData.d2;
+                }
+            }
+
+            foreach (var row in tableLpToPc)
+            {
+                if (string.IsNullOrEmpty(row.cross))
+                {
+                    row.cross = row.xbinAfterSelection;
+                }
+            }
+
+            return tableLpToPc;
+        }
+
+        public MutationResult MutateBin(string xBin, double pm)
+        {
+            Random random = new Random();
+            var xbinTab = xBin.ToCharArray();
+            var mutatedBits = new List<int>();
+
+            for (int index = 0; index < xbinTab.Length; index++)
+            {
+                double r = random.NextDouble();
+                if (r <= pm)
+                {
+                    xbinTab[index] = xbinTab[index] == '0' ? '1' : '0';
+                    mutatedBits.Add(index);
+                }
+            }
+
+            return new MutationResult
+            {
+                XBin = new string(xbinTab),
+                MutatedBits = string.Join(",", mutatedBits),
+            };
+        }
+
+        public List<GeneticRow> GetTableLpToMutatedXbin(List<GeneticRow> tableLpToCross, double pm)
+        {
+            foreach (var row in tableLpToCross)
+            {
+                string xBin = row.cross;
+                var mutatedXBinData = MutateBin(xBin, pm);
+                row.mutatedBits = mutatedXBinData.MutatedBits;
+                row.xbinAfterMutation = mutatedXBinData.XBin;
+            }
+
+            return tableLpToCross;
+        }
+
+        public List<GeneticRow> GetTableLpToFxAfterMutation(List<GeneticRow> tableLpToMutatedXbin, int a, int b, int l, int decimalPlaces, EliteXreal elite, bool keepElite)
+        {
+            foreach (var row in tableLpToMutatedXbin)
+            {
+                string xBin = row.xbinAfterMutation;
+                int xInt = binToInt(xBin);
+                double xReal = intToReal(xInt, a, b, l, decimalPlaces);
+                double fx = FunctionValue(xReal);
+
+                row.xrealAfterMutation = xReal;
+                row.fxAfterMutation = fx;
+            }
+
+            if (keepElite && tableLpToMutatedXbin[elite.index].fxAfterMutation < elite.fx)
+            {
+                tableLpToMutatedXbin[elite.index].xrealAfterMutation = elite.xreal;
+                tableLpToMutatedXbin[elite.index].fxAfterMutation = elite.fx;
+            }
+            else if (keepElite)
+            {
+                var indexes = Enumerable.Range(0, tableLpToMutatedXbin.Count)
+                                        .Where(i => i != elite.index)
+                                        .OrderBy(_ => Guid.NewGuid())
+                                        .ToList();
+
+                foreach (var index in indexes)
+                {
+                    if (tableLpToMutatedXbin[index].fxAfterMutation < elite.fx)
+                    {
+                        tableLpToMutatedXbin[index].xrealAfterMutation = elite.xreal;
+                        tableLpToMutatedXbin[index].fxAfterMutation = elite.fx;
+                        break;
+                    }
+                }
+            }
+
+            return tableLpToMutatedXbin;
+        }
+
+        public (List<GeneticRow> FullTable, List<double> LastXreals, ChartData GenerationChartData) MakeGeneration(int a, int b, double d, int decimalPlaces, int n, List<double> xReals, double pk, double pm, string direction, int l, bool keepElite)
+        {
+            (List<GeneticRow> TableLpToFx, EliteXreal ElitexReal) tableLpToFxData = GetTableLpToFx(a, b, d, decimalPlaces, n, xReals);
+            List<GeneticRow> tableLpToFx = tableLpToFxData.TableLpToFx;
+            EliteXreal eliteXreal = tableLpToFxData.ElitexReal;
+
+            List<GeneticRow> tableLpToGx = GetTableLpToGx(tableLpToFx, d, direction);
+            List<GeneticRow> tableLpToPi = GetTableLpToPi(tableLpToGx);
+            List<GeneticRow> tableLpToQi = GetTableLpToQi(tableLpToPi);
+            List<GeneticRow> tableLpToR = GetTableLpToR(tableLpToQi);
+            List<GeneticRow> tableLpToSelectedXreal = GetTableLpToSelectedXreal(tableLpToR);
+            List<GeneticRow> tableLpToXbinAfterSelection = GetTableLpToXbinAfterSelection(tableLpToSelectedXreal, a, b, l);
+            List<GeneticRow> tableLpToParents = GetTableLpToParents(tableLpToXbinAfterSelection, pk);
+
+            (List<GeneticRow> TableLpToPc, List<ParentPair> Pairs) tableLpToPcData = GetTableLpToPc(tableLpToParents, l);
+            List<GeneticRow> tableLpToPc = tableLpToPcData.TableLpToPc;
+            List<ParentPair> pairs = tableLpToPcData.Pairs;
+
+            List<GeneticRow> tableLpToCross = GetTableLpToCross(tableLpToPc, pairs);
+            List<GeneticRow> tableLpToMutatedXbin = GetTableLpToMutatedXbin(tableLpToCross, pm);
+            List<GeneticRow> tableLpToFxAfterMutation = GetTableLpToFxAfterMutation(tableLpToMutatedXbin, a, b, l, decimalPlaces, eliteXreal, keepElite);
+
+            List<double> lastXReals = tableLpToFxAfterMutation.Select(row => row.xrealAfterMutation.GetValueOrDefault()).ToList();
+            List<double> lastFx = tableLpToFxAfterMutation.Select(row => row.fxAfterMutation.GetValueOrDefault()).ToList();
+
+            double max = lastFx.Max();
+            double min = lastFx.Min();
+            double avg = lastFx.Average();
+
+            ChartData generationChartData = new ChartData { Min = min, Max = max, Avg = avg };
+
+            return (tableLpToFxAfterMutation, lastXReals, generationChartData);
         }
 
         private void buttonStart_Click(object sender, EventArgs e)
         {
             // Clear data table
             this.dataGridView1.Rows.Clear();
+            this.dataGridView2.Rows.Clear();
 
             // Initialize variables
-            int a = 0, b = 0, n = 0;
+            int a = 0, b = 0, n = 0, t = 0;
+            double pk = 0, pm = 0;
+            bool keepElite = false;
+            string direction = "max";
             var decimalPrecisionData = getDecimalPrecisionData();
 
             // Set variables value
             int.TryParse(this.inputA.Text, out a);
             int.TryParse(this.inputB.Text, out b);
             int.TryParse(this.inputN.Text, out n);
-            double d = decimalPrecisionData.precision;
+            int.TryParse(this.inputT.Text, out t);
             int decimalPlaces = decimalPrecisionData.decimalPlaces;
 
-            if (staticData)
-            {
-                a = -2;
-                b = 3;
-                d = 0.001;
-                decimalPlaces = 3;
-            }
+            double d = decimalPrecisionData.precision;
+            double.TryParse(this.inputPK.Text.Replace(".",","), out pk);
+            double.TryParse(this.inputPM.Text.Replace(".", ","), out pm);
 
+            keepElite = this.checkboxElite.Checked;
             int l = this.getL(a, b, d);
 
-            for (int i = 1; i <= n; ++i)
+            // Chart setup
+            chart1.Series.Clear();
+
+            var chartArea = chart1.ChartAreas[0];
+            chartArea.AxisX.IsStartedFromZero = false;
+            chartArea.AxisY.IsStartedFromZero = false;
+
+            chartArea.AxisX.Minimum = 0;
+            chartArea.AxisX.Interval = t / 10;
+
+            chartArea.AxisY.Minimum = -2;
+            chartArea.AxisY.Maximum = 3;
+            chartArea.AxisY.Interval = 1;
+
+            var series1 = new Series("Min f(x)") { ChartType = SeriesChartType.Line, Color = System.Drawing.Color.Red };
+            var series2 = new Series("Max f(x)") { ChartType = SeriesChartType.Line, Color = System.Drawing.Color.Blue };
+            var series3 = new Series("Average f(x)") { ChartType = SeriesChartType.Line, Color = System.Drawing.Color.Orange };
+
+            chart1.Series.Add(series1);
+            chart1.Series.Add(series2);
+            chart1.Series.Add(series3);
+
+            List<double> insertXreals = new List<double>();
+
+            for (int i = 0; i < t; i++)
             {
-                // Initialize variables
-                int xIntFirst, xIntSecond;
-                double xRealFirst, xRealSecond, xF;
-                string xBin;
-
-                // Set variables value
-                xRealFirst = this.GenerateNumberInRangeWithPrecision(a, b, decimalPlaces);
-
-                if (staticData)
+                (List<GeneticRow> FullTable, List<double> LastXreals, ChartData GenerationChartData) generation = MakeGeneration(a, b, d, decimalPlaces, n, insertXreals, pk, pm, direction, l, keepElite);
+                foreach (GeneticRow row in generation.FullTable)
                 {
-                    xRealFirst = -1.012;
+
+                    double minVal = generation.GenerationChartData.Min;
+                    double maxVal = generation.GenerationChartData.Max;
+                    double avgVal = generation.GenerationChartData.Avg;
+
+                    series1.Points.AddXY(i, minVal);
+                    series2.Points.AddXY(i, maxVal);
+                    series3.Points.AddXY(i, avgVal);
+
+                    if (i == t - 1)
+                    {
+                        this.dataGridView1.Rows.Add(row.lp, row.xreal, row.fx, row.gx, row.pi, row.qi, row.r, row.xrealAfterSelection, row.xbinAfterSelection, row.parent, row.pc, row.cross, row.mutatedBits, row.xbinAfterMutation, row.xrealAfterMutation, row.fxAfterMutation);
+                    }
+
                 }
-
-                xIntFirst = this.realToInt(xRealFirst, a, b, l);
-                xBin = this.intToBin(xIntFirst, l);
-                xIntSecond = this.binToInt(xBin);
-                xRealSecond = this.intToReal(xIntSecond, a, b, l, decimalPlaces);
-                xF = this.xF(xRealSecond);
-
-                // Add table row with values
-                this.dataGridView1.Rows.Add(i, this.forceDecimalPlaces(xRealFirst,decimalPlaces), xIntFirst, xBin, xIntSecond, this.forceDecimalPlaces(xRealSecond,decimalPlaces), xF);
+                insertXreals = generation.LastXreals;
             }
 
-            // Show table
+            Dictionary<double, int> xRealsFrequency = new Dictionary<double, int>();
+
+            foreach (double item in insertXreals)
+            {
+                if (xRealsFrequency.ContainsKey(item))
+                {
+                    xRealsFrequency[item]++;
+                }
+                else
+                {
+                    xRealsFrequency[item] = 1;
+                }
+            }
+
+            IEnumerable<KeyValuePair<double, int>> sortedxRealsFrequency = xRealsFrequency.OrderByDescending(pair => pair.Value);
+
+            int lp = 1;
+            foreach (KeyValuePair<double, int> pair in sortedxRealsFrequency)
+            {
+                string xBin = intToBin(realToInt(pair.Key, a, b, l), l);
+                double fx = FunctionValue(pair.Key);
+                double percentage = (double)pair.Value / insertXreals.Count;
+                this.dataGridView2.Rows.Add(lp, pair.Key, xBin, fx, Math.Round(percentage * 100) + "%");
+                lp++;
+            }
+
             this.dataGridView1.Visible = true;
+            this.dataGridView2.Visible = true;
         }
 
         private void ISA_Resize(object sender, EventArgs e)

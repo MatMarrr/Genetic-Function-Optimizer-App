@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\MatMar\\Desktop\\ISA KOD\\C#\\ISA-1\\ISA-1.csproj": {}
+    "C:\\Users\\MatMar\\Desktop\\ISA KOD\\C# END GENETIC\\WYKREEES\\ISA-1\\ISA-1.csproj": {}
   },
   "projects": {
-    "C:\\Users\\MatMar\\Desktop\\ISA KOD\\C#\\ISA-1\\ISA-1.csproj": {
+    "C:\\Users\\MatMar\\Desktop\\ISA KOD\\C# END GENETIC\\WYKREEES\\ISA-1\\ISA-1.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\MatMar\\Desktop\\ISA KOD\\C#\\ISA-1\\ISA-1.csproj",
+        "projectUniqueName": "C:\\Users\\MatMar\\Desktop\\ISA KOD\\C# END GENETIC\\WYKREEES\\ISA-1\\ISA-1.csproj",
         "projectName": "ISA-1",
-        "projectPath": "C:\\Users\\MatMar\\Desktop\\ISA KOD\\C#\\ISA-1\\ISA-1.csproj",
+        "projectPath": "C:\\Users\\MatMar\\Desktop\\ISA KOD\\C# END GENETIC\\WYKREEES\\ISA-1\\ISA-1.csproj",
         "packagesPath": "C:\\Users\\MatMar\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\MatMar\\Desktop\\ISA KOD\\C#\\ISA-1\\obj\\",
+        "outputPath": "C:\\Users\\MatMar\\Desktop\\ISA KOD\\C# END GENETIC\\WYKREEES\\ISA-1\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\MatMar\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -39,6 +39,16 @@
       "frameworks": {
         "net7.0-windows7.0": {
           "targetAlias": "net7.0-windows",
+          "dependencies": {
+            "DevExpress.Data": {
+              "target": "Package",
+              "version": "[23.1.6, )"
+            },
+            "WinForms.DataVisualization": {
+              "target": "Package",
+              "version": "[1.9.1, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
