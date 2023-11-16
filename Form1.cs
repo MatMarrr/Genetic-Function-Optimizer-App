@@ -4,6 +4,9 @@ using System.Reflection;
 using System.Reflection.Metadata.Ecma335;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Windows.Forms.DataVisualization.Charting;
+using System.Diagnostics;
+using static ISA_1.ISA;
+
 namespace ISA_1
 {
     public partial class ISA : Form
@@ -18,6 +21,10 @@ namespace ISA_1
             // Set style for data grid view
             dataGridView1.RowHeadersVisible = false;
             dataGridView1.AllowUserToAddRows = false;
+            dataGridView2.RowHeadersVisible = false;
+            dataGridView2.RowHeadersVisible = false;
+            dataGridView3.AllowUserToAddRows = false;
+            dataGridView3.AllowUserToAddRows = false;
 
             // Set style for groupBox Header
             this.groupBoxHeader.Paint += groupBoxHeader_Paint!;
@@ -539,6 +546,9 @@ namespace ISA_1
 
         private void buttonStart_Click(object sender, EventArgs e)
         {
+            var stopwatch2 = new Stopwatch();
+            stopwatch2.Start();
+
             // Clear data table
             this.dataGridView1.Rows.Clear();
             this.dataGridView2.Rows.Clear();
@@ -550,7 +560,7 @@ namespace ISA_1
             string direction = "max";
             var decimalPrecisionData = getDecimalPrecisionData();
 
-            // Set variables value
+            // Set variables values
             int.TryParse(this.inputA.Text, out a);
             int.TryParse(this.inputB.Text, out b);
             int.TryParse(this.inputN.Text, out n);
@@ -558,7 +568,7 @@ namespace ISA_1
             int decimalPlaces = decimalPrecisionData.decimalPlaces;
 
             double d = decimalPrecisionData.precision;
-            double.TryParse(this.inputPK.Text.Replace(".",","), out pk);
+            double.TryParse(this.inputPK.Text.Replace(".", ","), out pk);
             double.TryParse(this.inputPM.Text.Replace(".", ","), out pm);
 
             keepElite = this.checkboxElite.Checked;
@@ -574,7 +584,7 @@ namespace ISA_1
             chartArea.AxisX.Minimum = 0;
             chartArea.AxisX.Interval = t / 10;
 
-            chartArea.AxisY.Minimum = -2;
+            chartArea.AxisY.Minimum = -3;
             chartArea.AxisY.Maximum = 3;
             chartArea.AxisY.Interval = 1;
 
@@ -633,12 +643,112 @@ namespace ISA_1
                 string xBin = intToBin(realToInt(pair.Key, a, b, l), l);
                 double fx = FunctionValue(pair.Key);
                 double percentage = (double)pair.Value / insertXreals.Count;
-                this.dataGridView2.Rows.Add(lp, pair.Key, xBin, fx, Math.Round(percentage * 100) + "%");
+                this.dataGridView2.Rows.Add(lp, pair.Key, xBin, fx, percentage * 100 + " %(" + pair.Value + "/" + insertXreals.Count() + ")");
                 lp++;
             }
 
-            this.dataGridView1.Visible = true;
+            //this.dataGridView1.Visible = true;
             this.dataGridView2.Visible = true;
+
+            stopwatch2.Stop();
+            TimeSpan ts = stopwatch2.Elapsed;
+            this.generationsTime.Text = string.Format(ts.Milliseconds + "ms");
+
+        }
+
+        public class TestResult
+        {
+            public int n { get; set; }
+            public double pk { get; set; }
+            public double pm { get; set; }
+            public int t { get; set; }
+            public double avg { get; set; }
+        }
+
+        private async void buttonTests_Click(object sender, EventArgs e)
+        {
+            this.isTestLoading.Text = "Running";
+
+            this.dataGridView3.Rows.Clear();
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            List<int> testN = new List<int> { 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80 };
+            List<double> testPk = new List<double> { 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9 };
+            List<double> testPm = new List<double> { 0.0001, 0.0005, 0.001, 0.0015, 0.002, 0.0025, 0.003, 0.0035, 0.004, 0.0045, 0.005, 0.0055, 0.006, 0.0065, 0.007, 0.0075, 0.008, 0.0085, 0.009, 0.0095, 0.01 };
+            List<int> testT = new List<int> { 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150 };
+
+            //List<int> testN = new List<int> { 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80 };
+            //List<double> testPk = new List<double> { 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9 };
+            //List<double> testPm = new List<double> { 0.0001, 0.0005, 0.001, 0.005, 0.01 };
+            //List<int> testT = new List<int> { 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150 };
+
+            int lValue = this.getL(-4, 12, 0.001);
+            int paramsCombinations = testN.Count() * testPk.Count() * testPm.Count() * testT.Count();
+
+            List<TestResult> testResult = new List<TestResult>();
+            List<Task> tasks = new List<Task>();
+
+            foreach (int n in testN)
+            {
+                foreach (double pk in testPk)
+                {
+                    foreach (double pm in testPm)
+                    {
+                        foreach (int t in testT)
+                        {
+                            tasks.Add(Task.Run(() =>
+                            {
+                                List<double> allResultMax = new List<double>();
+                                for (int i = 0; i < 1; i++)
+                                {
+                                    List<double> insertXreals = new List<double>();
+                                    for (int nIter = 0; nIter < t; nIter++)
+                                    {
+                                        (List<GeneticRow> FullTable, List<double> LastXreals, ChartData GenerationChartData) generation = MakeGeneration(-4, 12, 0.001, 3, n, insertXreals, pk, pm, "max", lValue, true);
+
+                                        insertXreals = generation.LastXreals;
+                                        allResultMax.Add(generation.GenerationChartData.Max);
+                                    }
+                                }
+
+                                lock (testResult)
+                                {
+                                    testResult.Add(new TestResult
+                                    {
+                                        n = n,
+                                        pk = pk,
+                                        pm = pm,
+                                        t = t,
+                                        avg = allResultMax.Average()
+                                    });
+                                    if (testResult.Count % 100 == 0)
+                                    {
+                                        Debug.WriteLine(testResult.Count + "/" + paramsCombinations + " tested " + (paramsCombinations - testResult.Count) + " left");
+                                    }
+                                }
+                            }));
+                        }
+                    }
+                }
+            }
+
+            await Task.WhenAll(tasks);
+
+            stopwatch.Stop();
+            TimeSpan ts = stopwatch.Elapsed;
+            var sortedResults = testResult.OrderByDescending(tr => tr.avg).ThenBy(tr => tr.t).ToList();
+
+            this.Invoke(new Action(() =>
+            {
+                this.isTestLoading.Text = string.Format("Czas wykonania:\n{0} godzin \n{1} minut \n{2} sekund", ts.Hours, ts.Minutes, ts.Seconds);
+                ;
+                for (int lp = 1; lp <= 50; lp++)
+                {
+                    var result = sortedResults[lp - 1];
+                    this.dataGridView3.Rows.Add(lp, result.n, result.pk, result.pm, result.t, result.avg);
+                }
+            }));
         }
 
         private void ISA_Resize(object sender, EventArgs e)
@@ -655,5 +765,6 @@ namespace ISA_1
         {
             e.Graphics.Clear(SystemColors.Control);
         }
+
     }
 }

@@ -58,6 +58,7 @@
             Column15 = new DataGridViewTextBoxColumn();
             Column16 = new DataGridViewTextBoxColumn();
             groupBoxHeader = new GroupBox();
+            generationsTime = new Label();
             checkboxElite = new CheckBox();
             label3 = new Label();
             inputT = new TextBox();
@@ -73,10 +74,20 @@
             xBin = new DataGridViewTextBoxColumn();
             fX = new DataGridViewTextBoxColumn();
             percentage = new DataGridViewTextBoxColumn();
+            buttonTests = new Button();
+            dataGridView3 = new DataGridView();
+            testLp = new DataGridViewTextBoxColumn();
+            testN = new DataGridViewTextBoxColumn();
+            testPk = new DataGridViewTextBoxColumn();
+            testPM = new DataGridViewTextBoxColumn();
+            testT = new DataGridViewTextBoxColumn();
+            testAVG = new DataGridViewTextBoxColumn();
+            isTestLoading = new Label();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             groupBoxHeader.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)chart1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dataGridView2).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridView3).BeginInit();
             SuspendLayout();
             // 
             // buttonStart
@@ -165,10 +176,10 @@
             dataGridView1.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView1.Columns.AddRange(new DataGridViewColumn[] { Column1, Column2, Column3, Column4, Column5, Column6, Column7, Column8, Column9, Column10, Column11, Column12, Column13, Column14, Column15, Column16 });
-            dataGridView1.Location = new Point(521, 400);
+            dataGridView1.Location = new Point(821, 719);
             dataGridView1.Name = "dataGridView1";
             dataGridView1.RowTemplate.Height = 25;
-            dataGridView1.Size = new Size(737, 343);
+            dataGridView1.Size = new Size(67, 52);
             dataGridView1.TabIndex = 9;
             dataGridView1.Visible = false;
             // 
@@ -270,6 +281,7 @@
             // 
             // groupBoxHeader
             // 
+            groupBoxHeader.Controls.Add(generationsTime);
             groupBoxHeader.Controls.Add(checkboxElite);
             groupBoxHeader.Controls.Add(label3);
             groupBoxHeader.Controls.Add(inputT);
@@ -289,9 +301,17 @@
             groupBoxHeader.ForeColor = SystemColors.ControlText;
             groupBoxHeader.Location = new Point(248, 12);
             groupBoxHeader.Name = "groupBoxHeader";
-            groupBoxHeader.Size = new Size(802, 54);
+            groupBoxHeader.Size = new Size(917, 54);
             groupBoxHeader.TabIndex = 10;
             groupBoxHeader.TabStop = false;
+            // 
+            // generationsTime
+            // 
+            generationsTime.AutoSize = true;
+            generationsTime.Location = new Point(804, 24);
+            generationsTime.Name = "generationsTime";
+            generationsTime.Size = new Size(0, 15);
+            generationsTime.TabIndex = 16;
             // 
             // checkboxElite
             // 
@@ -376,7 +396,7 @@
             series1.Legend = "Legend1";
             series1.Name = "Series1";
             chart1.Series.Add(series1);
-            chart1.Size = new Size(1225, 303);
+            chart1.Size = new Size(1177, 303);
             chart1.TabIndex = 12;
             chart1.Text = "chart1";
             // 
@@ -386,10 +406,10 @@
             dataGridView2.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             dataGridView2.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView2.Columns.AddRange(new DataGridViewColumn[] { Lp, xReal, xBin, fX, percentage });
-            dataGridView2.Location = new Point(33, 400);
+            dataGridView2.Location = new Point(34, 400);
             dataGridView2.Name = "dataGridView2";
             dataGridView2.RowTemplate.Height = 25;
-            dataGridView2.Size = new Size(435, 343);
+            dataGridView2.Size = new Size(510, 300);
             dataGridView2.TabIndex = 13;
             dataGridView2.Visible = false;
             // 
@@ -423,11 +443,82 @@
             percentage.Name = "percentage";
             percentage.Width = 42;
             // 
+            // buttonTests
+            // 
+            buttonTests.Location = new Point(623, 492);
+            buttonTests.Name = "buttonTests";
+            buttonTests.Size = new Size(75, 23);
+            buttonTests.TabIndex = 14;
+            buttonTests.Text = "Test";
+            buttonTests.TextAlign = ContentAlignment.TopCenter;
+            buttonTests.UseVisualStyleBackColor = true;
+            buttonTests.Click += buttonTests_Click;
+            // 
+            // dataGridView3
+            // 
+            dataGridView3.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            dataGridView3.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+            dataGridView3.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView3.Columns.AddRange(new DataGridViewColumn[] { testLp, testN, testPk, testPM, testT, testAVG });
+            dataGridView3.Location = new Point(759, 400);
+            dataGridView3.Name = "dataGridView3";
+            dataGridView3.RowTemplate.Height = 25;
+            dataGridView3.Size = new Size(451, 300);
+            dataGridView3.TabIndex = 15;
+            // 
+            // testLp
+            // 
+            testLp.HeaderText = "Lp";
+            testLp.Name = "testLp";
+            testLp.Width = 45;
+            // 
+            // testN
+            // 
+            testN.HeaderText = "n";
+            testN.Name = "testN";
+            testN.Width = 39;
+            // 
+            // testPk
+            // 
+            testPk.HeaderText = "pk";
+            testPk.Name = "testPk";
+            testPk.Width = 45;
+            // 
+            // testPM
+            // 
+            testPM.HeaderText = "pm";
+            testPM.Name = "testPM";
+            testPM.Width = 50;
+            // 
+            // testT
+            // 
+            testT.HeaderText = "T";
+            testT.Name = "testT";
+            testT.Width = 38;
+            // 
+            // testAVG
+            // 
+            testAVG.HeaderText = "avg";
+            testAVG.Name = "testAVG";
+            testAVG.Width = 51;
+            // 
+            // isTestLoading
+            // 
+            isTestLoading.AutoSize = true;
+            isTestLoading.Location = new Point(623, 518);
+            isTestLoading.Name = "isTestLoading";
+            isTestLoading.Size = new Size(63, 15);
+            isTestLoading.TabIndex = 16;
+            isTestLoading.Text = "   Start Test";
+            // 
             // ISA
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1289, 783);
+            Controls.Add(isTestLoading);
+            Controls.Add(dataGridView3);
+            Controls.Add(buttonTests);
             Controls.Add(dataGridView2);
             Controls.Add(chart1);
             Controls.Add(labelSignature);
@@ -441,6 +532,7 @@
             groupBoxHeader.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)chart1).EndInit();
             ((System.ComponentModel.ISupportInitialize)dataGridView2).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridView3).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -489,5 +581,15 @@
         private DataGridViewTextBoxColumn xBin;
         private DataGridViewTextBoxColumn fX;
         private DataGridViewTextBoxColumn percentage;
+        private Button buttonTests;
+        private DataGridView dataGridView3;
+        private Label isTestLoading;
+        private DataGridViewTextBoxColumn testLp;
+        private DataGridViewTextBoxColumn testN;
+        private DataGridViewTextBoxColumn testPk;
+        private DataGridViewTextBoxColumn testPM;
+        private DataGridViewTextBoxColumn testT;
+        private DataGridViewTextBoxColumn testAVG;
+        private Label generationsTime;
     }
 }
