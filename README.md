@@ -1,4 +1,4 @@
-# Genetic Algorithm App
+# Genetic Function Optimizer App 
 ## [Download exe](https://drive.google.com/file/d/1Iz86YcCjHcTjXbwxc_9QsHDGEEWST_0i/view?usp=sharing)
 ## Used Technologies
 
