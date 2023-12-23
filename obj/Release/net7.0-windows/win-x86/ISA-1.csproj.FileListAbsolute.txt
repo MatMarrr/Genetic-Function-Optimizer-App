@@ -954,3 +954,7 @@ C:\Users\MatMar\Desktop\ISA KOD\C# END GENETIC\WYKREEES\ISA-1\obj\Release\net7.0
 C:\Users\MatMar\Desktop\ISA KOD\C# END GENETIC\WYKREEES\ISA-1\obj\Release\net7.0-windows\win-x86\ISA-1.pdb
 C:\Users\MatMar\Desktop\ISA KOD\C# END GENETIC\WYKREEES\ISA-1\obj\Release\net7.0-windows\win-x86\ISA-1.genruntimeconfig.cache
 C:\Users\MatMar\Desktop\ISA KOD\C# END GENETIC\WYKREEES\ISA-1\obj\Release\net7.0-windows\win-x86\ref\ISA-1.dll
+C:\Users\MatMar\Desktop\ISA KOD\C#\ISA-1\bin\Release\net7.0-windows\win-x86\DevExpress.Data.v23.1.dll
+C:\Users\MatMar\Desktop\ISA KOD\C#\ISA-1\bin\Release\net7.0-windows\win-x86\WinForms.DataVisualization.Utilities.dll
+C:\Users\MatMar\Desktop\ISA KOD\C#\ISA-1\bin\Release\net7.0-windows\win-x86\WinForms.DataVisualization.dll
+C:\Users\MatMar\Desktop\ISA KOD\C#\ISA-1\obj\Release\net7.0-windows\win-x86\ISA-1.csproj.AssemblyReference.cache

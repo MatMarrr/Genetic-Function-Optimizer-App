@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "EQd92gkSBHusoiPoiGvbrYpV0QsgQETUVSPZcRg9iFY2fFlwrB6KsYzqkEaTYLY+emFEgVDaENPVoDJGkLHMdQ==",
+  "dgSpecHash": "jhJ5f/uuKrTg08+H7Ws+qg5OKvxFZR5ETrSKoc9DDkzhfnYpzb31BWJAEMmCBYjQ0+3tRkH7534x8anvRUdxlQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\MatMar\\Desktop\\ISA KOD\\C# END GENETIC\\WYKREEES\\ISA-1\\ISA-1.csproj",
+  "projectFilePath": "C:\\Users\\MatMar\\Desktop\\ISA KOD\\C#\\ISA-1\\ISA-1.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\MatMar\\.nuget\\packages\\devexpress.data\\23.1.6\\devexpress.data.23.1.6.nupkg.sha512",
     "C:\\Users\\MatMar\\.nuget\\packages\\microsoft.netcore.platforms\\3.1.4\\microsoft.netcore.platforms.3.1.4.nupkg.sha512",
