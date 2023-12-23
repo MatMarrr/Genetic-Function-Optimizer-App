@@ -1,5 +1,5 @@
 # Genetic Algorithm App
-
+## [Download exe](https://drive.google.com/file/d/1Iz86YcCjHcTjXbwxc_9QsHDGEEWST_0i/view?usp=sharing)
 ## Used Technologies
 
 [<img align="left" alt="C#" width="36px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/csharp/csharp-original.svg" style="padding-right:10px;"/>][C#]
