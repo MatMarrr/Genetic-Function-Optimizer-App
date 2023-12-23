@@ -700,7 +700,7 @@ namespace ISA_1
                             tasks.Add(Task.Run(() =>
                             {
                                 List<double> allResultMax = new List<double>();
-                                for (int i = 0; i < 1; i++)
+                                for (int i = 0; i < 100; i++)
                                 {
                                     List<double> insertXreals = new List<double>();
                                     for (int nIter = 0; nIter < t; nIter++)

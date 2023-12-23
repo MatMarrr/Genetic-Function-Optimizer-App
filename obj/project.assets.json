@@ -940,11 +940,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\MatMar\\Desktop\\ISA KOD\\C# END GENETIC\\WYKREEES\\ISA-1\\ISA-1.csproj",
+      "projectUniqueName": "C:\\Users\\MatMar\\Desktop\\ISA KOD\\C#\\ISA-1\\ISA-1.csproj",
       "projectName": "ISA-1",
-      "projectPath": "C:\\Users\\MatMar\\Desktop\\ISA KOD\\C# END GENETIC\\WYKREEES\\ISA-1\\ISA-1.csproj",
+      "projectPath": "C:\\Users\\MatMar\\Desktop\\ISA KOD\\C#\\ISA-1\\ISA-1.csproj",
       "packagesPath": "C:\\Users\\MatMar\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\MatMar\\Desktop\\ISA KOD\\C# END GENETIC\\WYKREEES\\ISA-1\\obj\\",
+      "outputPath": "C:\\Users\\MatMar\\Desktop\\ISA KOD\\C#\\ISA-1\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\MatMar\\AppData\\Roaming\\NuGet\\NuGet.Config",
