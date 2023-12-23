@@ -756,9 +756,6 @@ namespace ISA_1
             // Set groupBoxHeader and dataGridView1 position to center on resize 
             this.groupBoxHeader.Left = this.Width / 2 - this.groupBoxHeader.Width / 2;
             this.dataGridView1.Left = this.Width / 2 - this.dataGridView1.Width / 2;
-
-            // Set labelSignature position to right on resize 
-            this.labelSignature.Left = this.Width - this.labelSignature.Width - 25;
         }
 
         private void groupBoxHeader_Paint(object sender, PaintEventArgs e)

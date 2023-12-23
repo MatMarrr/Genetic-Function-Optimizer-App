@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             buttonStart = new Button();
             labelA = new Label();
             inputA = new TextBox();
@@ -66,7 +66,6 @@
             inputPM = new TextBox();
             label1 = new Label();
             inputPK = new TextBox();
-            labelSignature = new Label();
             chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             dataGridView2 = new DataGridView();
             Lp = new DataGridViewTextBoxColumn();
@@ -374,28 +373,18 @@
             inputPK.TabIndex = 9;
             inputPK.Text = "0.85";
             // 
-            // labelSignature
-            // 
-            labelSignature.AutoSize = true;
-            labelSignature.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point);
-            labelSignature.Location = new Point(556, 744);
-            labelSignature.Name = "labelSignature";
-            labelSignature.Size = new Size(270, 30);
-            labelSignature.TabIndex = 11;
-            labelSignature.Text = "INA - MateuszMarek_20456";
-            // 
             // chart1
             // 
-            chartArea1.Name = "ChartArea1";
-            chart1.ChartAreas.Add(chartArea1);
-            legend1.Name = "Legend1";
-            chart1.Legends.Add(legend1);
+            chartArea2.Name = "ChartArea1";
+            chart1.ChartAreas.Add(chartArea2);
+            legend2.Name = "Legend1";
+            chart1.Legends.Add(legend2);
             chart1.Location = new Point(33, 72);
             chart1.Name = "chart1";
-            series1.ChartArea = "ChartArea1";
-            series1.Legend = "Legend1";
-            series1.Name = "Series1";
-            chart1.Series.Add(series1);
+            series2.ChartArea = "ChartArea1";
+            series2.Legend = "Legend1";
+            series2.Name = "Series1";
+            chart1.Series.Add(series2);
             chart1.Size = new Size(1177, 303);
             chart1.TabIndex = 12;
             chart1.Text = "chart1";
@@ -521,11 +510,10 @@
             Controls.Add(buttonTests);
             Controls.Add(dataGridView2);
             Controls.Add(chart1);
-            Controls.Add(labelSignature);
             Controls.Add(groupBoxHeader);
             Controls.Add(dataGridView1);
             Name = "ISA";
-            Text = "INA";
+            Text = "Genetic Function Optimizer";
             Resize += ISA_Resize;
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             groupBoxHeader.ResumeLayout(false);
@@ -550,7 +538,6 @@
         private Label labelN;
         private DataGridView dataGridView1;
         private GroupBox groupBoxHeader;
-        private Label labelSignature;
         private Label label3;
         private TextBox inputT;
         private Label label2;
