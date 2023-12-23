@@ -9,7 +9,7 @@
 
 ## Project Description
 
-This app solves function maximization using a genetic algorithm.
+This app optimizes function using a genetic algorithm, allowing for either maximization or minimization.
 
 [C#]: https://en.wikipedia.org/wiki/C_Sharp_(programming_language)
 [.NET]: https://en.wikipedia.org/wiki/.NET_Framework
